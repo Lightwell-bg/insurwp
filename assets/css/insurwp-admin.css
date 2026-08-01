@@ -1,0 +1,80 @@
+/**
+ * Стили админ-страницы InsurWP.
+ */
+
+.insurwp-admin__sync {
+	max-width: 900px;
+	padding: 16px 20px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	margin-top: 20px;
+	background: #fff;
+}
+
+.insurwp-admin__sync h2 {
+	margin-top: 0;
+}
+
+.insurwp-admin__sync-status {
+	margin-left: 10px;
+	color: #50575e;
+}
+
+.insurwp-admin__sync-status.is-error {
+	color: #b32d2e;
+}
+
+.insurwp-admin__sync-actions {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	margin-top: 14px;
+}
+
+.insurwp-admin__progress {
+	overflow: hidden;
+	height: 8px;
+	border-radius: 999px;
+	margin-top: 6px;
+	background: #f0f0f1;
+}
+
+.insurwp-admin__progress-bar {
+	width: 0;
+	height: 100%;
+	background: #2271b1;
+	transition: width 0.25s ease;
+}
+
+.insurwp-admin__diff {
+	max-width: 900px;
+	margin-top: 12px;
+}
+
+.insurwp-admin__diff code {
+	font-size: 12px;
+}
+
+.insurwp-admin__editor {
+	font-family: Consolas, Monaco, "Courier New", monospace;
+	font-size: 13px;
+	line-height: 1.5;
+	tab-size: 2;
+	white-space: pre;
+	overflow-wrap: normal;
+	overflow-x: auto;
+}
+
+.insurwp-admin__json-status {
+	min-height: 1.5em;
+	margin: 6px 0 0;
+	font-weight: 600;
+}
+
+.insurwp-admin__json-status.is-ok {
+	color: #1a7f37;
+}
+
+.insurwp-admin__json-status.is-error {
+	color: #b32d2e;
+}

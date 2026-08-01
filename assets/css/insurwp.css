@@ -1,0 +1,443 @@
+/**
+ * Стили калькулятора InsurWP.
+ *
+ * Самодостаточные: не требуют Bootstrap, jQuery или шрифтов с CDN.
+ * Все цвета вынесены в переменные, акцент задаётся из настроек через inline-стиль.
+ */
+
+.insurwp {
+	--insurwp-accent: #f0ad4e;
+	--insurwp-accent-ink: #3d2a06;
+	--insurwp-bg: #ffffff;
+	--insurwp-bg-soft: #f7f8fa;
+	--insurwp-ink: #1d2430;
+	--insurwp-ink-soft: #5d6875;
+	--insurwp-border: #e2e6ec;
+	--insurwp-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
+	--insurwp-radius: 14px;
+
+	box-sizing: border-box;
+	max-width: 100%;
+	padding: clamp(18px, 3vw, 28px);
+	border: 1px solid var(--insurwp-border);
+	border-radius: var(--insurwp-radius);
+	background: var(--insurwp-bg);
+	box-shadow: var(--insurwp-shadow);
+	color: var(--insurwp-ink);
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+.insurwp *,
+.insurwp *::before,
+.insurwp *::after {
+	box-sizing: inherit;
+}
+
+/* ---------- Шапка ---------- */
+
+.insurwp__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 20px;
+}
+
+.insurwp__title {
+	margin: 0;
+	font-size: clamp(18px, 2.4vw, 22px);
+	font-weight: 650;
+	line-height: 1.25;
+	color: var(--insurwp-ink);
+}
+
+.insurwp__recalc {
+	flex: none;
+	padding: 9px 16px;
+	border: 1px solid var(--insurwp-border);
+	border-radius: 9px;
+	background: var(--insurwp-bg-soft);
+	color: var(--insurwp-ink-soft);
+	font: inherit;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.insurwp__recalc:hover {
+	border-color: var(--insurwp-accent);
+	background: var(--insurwp-bg);
+	color: var(--insurwp-ink);
+}
+
+/* ---------- Форма ---------- */
+
+.insurwp__grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 18px 20px;
+}
+
+.insurwp__field {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	gap: 7px;
+}
+
+.insurwp__field--submit {
+	grid-column: 1 / -1;
+	align-items: center;
+	margin-top: 4px;
+}
+
+.insurwp__label {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--insurwp-ink);
+}
+
+.insurwp__control {
+	width: 100%;
+	max-width: 100%;
+	height: 44px;
+	padding: 0 12px;
+	border: 1px solid var(--insurwp-border);
+	border-radius: 9px;
+	margin: 0;
+	background: var(--insurwp-bg);
+	color: var(--insurwp-ink);
+	font: inherit;
+	font-size: 15px;
+	line-height: 42px;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	appearance: none;
+	-webkit-appearance: none;
+}
+
+select.insurwp__control {
+	padding-right: 36px;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%235d6875' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5 6 6.5l5-5'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 13px center;
+	cursor: pointer;
+}
+
+.insurwp__control:focus {
+	border-color: var(--insurwp-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--insurwp-accent) 28%, transparent);
+	outline: none;
+}
+
+.insurwp__control:invalid:not(:placeholder-shown) {
+	border-color: #d94a4a;
+}
+
+.insurwp__submit {
+	min-width: 260px;
+	max-width: 100%;
+	padding: 13px 32px;
+	border: 0;
+	border-radius: 10px;
+	background: var(--insurwp-accent);
+	color: var(--insurwp-accent-ink);
+	font: inherit;
+	font-size: 16px;
+	font-weight: 650;
+	cursor: pointer;
+	transition: filter 0.15s ease, transform 0.06s ease;
+}
+
+.insurwp__submit:hover {
+	filter: brightness(0.95);
+}
+
+.insurwp__submit:active {
+	transform: translateY(1px);
+}
+
+.insurwp__submit[disabled] {
+	cursor: progress;
+	opacity: 0.65;
+}
+
+.insurwp__error {
+	margin: 16px 0 0;
+	padding: 11px 14px;
+	border-radius: 9px;
+	background: #fdecec;
+	color: #a12626;
+	font-size: 14px;
+}
+
+/* ---------- Сводка выбранных параметров ---------- */
+
+.insurwp__summary {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 10px;
+	margin-bottom: 20px;
+}
+
+.insurwp__chip {
+	padding: 6px 12px;
+	border: 1px solid var(--insurwp-border);
+	border-radius: 999px;
+	background: var(--insurwp-bg-soft);
+	color: var(--insurwp-ink-soft);
+	font-size: 13.5px;
+	white-space: nowrap;
+}
+
+.insurwp__chip b {
+	color: var(--insurwp-ink);
+	font-weight: 600;
+}
+
+/* ---------- Результаты ---------- */
+
+.insurwp__count {
+	margin: 0 0 12px;
+	color: var(--insurwp-ink-soft);
+	font-size: 14px;
+}
+
+.insurwp__offers {
+	display: grid;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.insurwp__offer {
+	display: grid;
+	align-items: center;
+	gap: 12px 20px;
+	grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto;
+	padding: 16px 18px;
+	border: 1px solid var(--insurwp-border);
+	border-radius: 12px;
+	background: var(--insurwp-bg);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+	animation: insurwp-rise 0.28s ease both;
+}
+
+.insurwp__offer:hover {
+	border-color: color-mix(in srgb, var(--insurwp-accent) 55%, var(--insurwp-border));
+	box-shadow: var(--insurwp-shadow);
+}
+
+.insurwp__offer--best {
+	border-color: var(--insurwp-accent);
+	background: linear-gradient(0deg, color-mix(in srgb, var(--insurwp-accent) 7%, transparent), transparent);
+}
+
+@keyframes insurwp-rise {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.insurwp__offer {
+		animation: none;
+	}
+}
+
+.insurwp__offer-main {
+	min-width: 0;
+}
+
+.insurwp__offer-name {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	font-size: 16.5px;
+	font-weight: 650;
+}
+
+.insurwp__badge {
+	padding: 3px 9px;
+	border-radius: 999px;
+	background: var(--insurwp-accent);
+	color: var(--insurwp-accent-ink);
+	font-size: 11.5px;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.insurwp__offer-meta {
+	margin-top: 4px;
+	color: var(--insurwp-ink-soft);
+	font-size: 13.5px;
+}
+
+.insurwp__offer-price {
+	text-align: right;
+}
+
+.insurwp__price-eur {
+	font-size: 22px;
+	font-weight: 700;
+	line-height: 1.2;
+	white-space: nowrap;
+}
+
+.insurwp__price-bgn {
+	margin-top: 2px;
+	color: var(--insurwp-ink-soft);
+	font-size: 14px;
+	white-space: nowrap;
+}
+
+.insurwp__price-note {
+	margin-top: 2px;
+	color: var(--insurwp-ink-soft);
+	font-size: 12.5px;
+}
+
+.insurwp__order {
+	display: inline-block;
+	padding: 11px 26px;
+	border: 0;
+	border-radius: 9px;
+	background: var(--insurwp-accent);
+	color: var(--insurwp-accent-ink);
+	font-size: 15px;
+	font-weight: 650;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: filter 0.15s ease;
+}
+
+.insurwp__order:hover,
+.insurwp__order:focus {
+	color: var(--insurwp-accent-ink);
+	filter: brightness(0.95);
+	text-decoration: none;
+}
+
+/* ---------- Пустая выдача и скелетон ---------- */
+
+.insurwp__empty {
+	padding: 22px;
+	border: 1px dashed var(--insurwp-border);
+	border-radius: 12px;
+	background: var(--insurwp-bg-soft);
+	text-align: center;
+}
+
+.insurwp__empty strong {
+	display: block;
+	margin-bottom: 6px;
+	font-size: 16px;
+}
+
+.insurwp__empty span {
+	color: var(--insurwp-ink-soft);
+	font-size: 14px;
+}
+
+.insurwp__skeleton {
+	display: grid;
+	gap: 12px;
+}
+
+.insurwp__skeleton-row {
+	height: 78px;
+	border-radius: 12px;
+	background: linear-gradient(90deg, var(--insurwp-bg-soft) 25%, #eef1f5 37%, var(--insurwp-bg-soft) 63%);
+	background-size: 400% 100%;
+	animation: insurwp-shimmer 1.3s ease-in-out infinite;
+}
+
+@keyframes insurwp-shimmer {
+	from {
+		background-position: 100% 50%;
+	}
+
+	to {
+		background-position: 0 50%;
+	}
+}
+
+.insurwp__note {
+	margin: 18px 0 0;
+	color: var(--insurwp-ink-soft);
+	font-size: 12.5px;
+	line-height: 1.45;
+}
+
+/* ---------- Адаптив ---------- */
+
+@media (max-width: 860px) {
+	.insurwp__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 600px) {
+	.insurwp__grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.insurwp__offer {
+		grid-template-columns: minmax(0, 1fr);
+		text-align: left;
+	}
+
+	.insurwp__offer-price {
+		text-align: left;
+	}
+
+	.insurwp__order,
+	.insurwp__submit {
+		display: block;
+		width: 100%;
+		min-width: 0;
+		text-align: center;
+	}
+
+	.insurwp__head {
+		flex-wrap: wrap;
+	}
+}
+
+/* ---------- Тёмная тема ---------- */
+
+@media (prefers-color-scheme: dark) {
+	.insurwp {
+		--insurwp-bg: #171b21;
+		--insurwp-bg-soft: #1e242c;
+		--insurwp-ink: #eef1f5;
+		--insurwp-ink-soft: #a3adba;
+		--insurwp-border: #2c333d;
+		--insurwp-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+	}
+
+	.insurwp__error {
+		background: #3a1f1f;
+		color: #ffb4b4;
+	}
+
+	.insurwp__skeleton-row {
+		background: linear-gradient(90deg, #1e242c 25%, #262e38 37%, #1e242c 63%);
+		background-size: 400% 100%;
+	}
+
+	select.insurwp__control {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23a3adba' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5 6 6.5l5-5'/%3E%3C/svg%3E");
+	}
+}

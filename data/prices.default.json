@@ -1,0 +1,306 @@
+{
+  "checked_at": "2026-08-01",
+  "currency_displayed_by_calculator": "EUR",
+  "insured_persons": 1,
+  "insurance_limit_eur": 30677.51,
+  "calculator_url": "https://bginfo.eu/insur/",
+  "citizenship_affects_price": false,
+  
+  "insurers": {
+    "uniqa": {
+      "name": "UNIQA",
+      "official_url": "https://www.uniqa.bg/individualni/zastrahovki-zdrave-i-zhivot/medicinska-zastrahovka-za-chuzhdenci",
+      "insurance_limit_eur": 30677.51,
+      "territories": [
+        "Болгария",
+        "Шенген"
+      ],
+      "maximum_age": 85,
+      "age_groups": {
+        "0_69": {
+          "min_age": 0,
+          "max_age": 69,
+          "coefficient": 1
+        },
+        "70_74": {
+          "min_age": 70,
+          "max_age": 74,
+          "coefficient": 2
+        },
+        "75_85": {
+          "min_age": 75,
+          "max_age": 85,
+          "coefficient": 3
+        }
+      },
+      "prices": [
+        {
+          "term": "3 дня",
+          "bulgaria_0_69": 3.97,
+          "schengen_0_69": 4.36,
+          "bulgaria_70_74": 7.94,
+          "schengen_70_74": 8.71,
+          "bulgaria_75_85": 11.90,
+          "schengen_75_85": 13.07
+        },
+        {
+          "term": "7 дней",
+          "bulgaria_0_69": 6.15,
+          "schengen_0_69": 6.77,
+          "bulgaria_70_74": 12.30,
+          "schengen_70_74": 13.55,
+          "bulgaria_75_85": 18.42,
+          "schengen_75_85": 20.32
+        },
+        {
+          "term": "15 дней",
+          "bulgaria_0_69": 9.44,
+          "schengen_0_69": 10.38,
+          "bulgaria_70_74": 18.87,
+          "schengen_70_74": 20.77,
+          "bulgaria_75_85": 28.31,
+          "schengen_75_85": 31.15
+        },
+        {
+          "term": "1 месяц",
+          "bulgaria_0_69": 17.11,
+          "schengen_0_69": 18.82,
+          "bulgaria_70_74": 34.21,
+          "schengen_70_74": 37.64,
+          "bulgaria_75_85": 51.32,
+          "schengen_75_85": 56.46
+        },
+        {
+          "term": "2 месяца",
+          "bulgaria_0_69": 29.15,
+          "schengen_0_69": 32.07,
+          "bulgaria_70_74": 58.30,
+          "schengen_70_74": 64.14,
+          "bulgaria_75_85": 87.45,
+          "schengen_75_85": 96.21
+        },
+        {
+          "term": "3 месяца",
+          "bulgaria_0_69": 35.62,
+          "schengen_0_69": 39.18,
+          "bulgaria_70_74": 71.24,
+          "schengen_70_74": 78.36,
+          "bulgaria_75_85": 106.86,
+          "schengen_75_85": 117.53
+        },
+        {
+          "term": "4 месяца",
+          "bulgaria_0_69": 38.85,
+          "schengen_0_69": 42.74,
+          "bulgaria_70_74": 77.70,
+          "schengen_70_74": 85.48,
+          "bulgaria_75_85": 116.56,
+          "schengen_75_85": 128.21
+        },
+        {
+          "term": "5 месяцев",
+          "bulgaria_0_69": 44.33,
+          "schengen_0_69": 48.77,
+          "bulgaria_70_74": 88.66,
+          "schengen_70_74": 97.53,
+          "bulgaria_75_85": 132.99,
+          "schengen_75_85": 146.30
+        },
+        {
+          "term": "6 месяцев",
+          "bulgaria_0_69": 54.03,
+          "schengen_0_69": 59.44,
+          "bulgaria_70_74": 108.06,
+          "schengen_70_74": 118.87,
+          "bulgaria_75_85": 162.09,
+          "schengen_75_85": 178.31
+        },
+        {
+          "term": "7 месяцев",
+          "bulgaria_0_69": 71.97,
+          "schengen_0_69": 79.16,
+          "bulgaria_70_74": 143.94,
+          "schengen_70_74": 158.32,
+          "bulgaria_75_85": 215.91,
+          "schengen_75_85": 237.49
+        },
+        {
+          "term": "8 месяцев",
+          "bulgaria_0_69": 71.97,
+          "schengen_0_69": 79.16,
+          "bulgaria_70_74": 143.94,
+          "schengen_70_74": 158.32,
+          "bulgaria_75_85": 215.91,
+          "schengen_75_85": 237.49
+        },
+        {
+          "term": "9 месяцев",
+          "bulgaria_0_69": 71.97,
+          "schengen_0_69": 79.16,
+          "bulgaria_70_74": 143.94,
+          "schengen_70_74": 158.32,
+          "bulgaria_75_85": 215.91,
+          "schengen_75_85": 237.49
+        },
+        {
+          "term": "10 месяцев",
+          "bulgaria_0_69": 89.70,
+          "schengen_0_69": 98.67,
+          "bulgaria_70_74": 179.40,
+          "schengen_70_74": 197.35,
+          "bulgaria_75_85": 269.10,
+          "schengen_75_85": 296.02
+        },
+        {
+          "term": "11 месяцев",
+          "bulgaria_0_69": 89.70,
+          "schengen_0_69": 98.67,
+          "bulgaria_70_74": 179.40,
+          "schengen_70_74": 197.35,
+          "bulgaria_75_85": 269.10,
+          "schengen_75_85": 296.02
+        },
+        {
+          "term": "12 месяцев",
+          "bulgaria_0_69": 89.70,
+          "schengen_0_69": 98.67,
+          "bulgaria_70_74": 179.40,
+          "schengen_70_74": 197.35,
+          "bulgaria_75_85": 269.10,
+          "schengen_75_85": 296.02
+        }
+      ]
+    },
+    "bulstrad_life": {
+      "name": "Bulstrad Life",
+      "official_url": "https://www.bulstradlife.bg/products/za-men-i-blizkite-mi-meditsinska-zastrakhovka-za-chuzhdentsi-prebivavashchi-na-teritoriyata-na-republika-blgariya",
+      "online_service_url": "https://b-assist.bulstradlife.bg/",
+      "insurance_limit_eur": 30000,
+      "territories": [
+        "Болгария",
+        "Шенген"
+      ],
+      "minimum_term": "1 день",
+      "maximum_term": "1 год",
+      "age_rules": {
+        "0_64": {
+          "min_age": 0,
+          "max_age": 64,
+          "bulgaria_available": true,
+          "schengen_available": true
+        },
+        "65_69": {
+          "min_age": 65,
+          "max_age": 69,
+          "bulgaria_available": true,
+          "schengen_available": false
+        },
+        "70_plus": {
+          "min_age": 70,
+          "bulgaria_available": false,
+          "schengen_available": false
+        }
+      },
+      "prices": [
+        {
+          "term": "3 дня",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 11.22,
+          "bulgaria_65_69": 20.40
+        },
+        {
+          "term": "7 дней",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 24.48,
+          "bulgaria_65_69": null
+        },
+        {
+          "term": "15 дней",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 31.62,
+          "bulgaria_65_69": null
+        },
+        {
+          "term": "1 месяц",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 39.78,
+          "bulgaria_65_69": 69.36
+        },
+        {
+          "term": "2 месяца",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 57.12,
+          "bulgaria_65_69": 104.04
+        },
+        {
+          "term": "3 месяца",
+          "bulgaria_0_64": 80.38,
+          "schengen_0_64": 84.46,
+          "bulgaria_65_69": 138.72
+        },
+        {
+          "term": "4 месяца",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 102.82,
+          "bulgaria_65_69": 173.40
+        },
+        {
+          "term": "5 месяцев",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 120.16,
+          "bulgaria_65_69": 208.08
+        },
+        {
+          "term": "6 месяцев",
+          "bulgaria_0_64": 128.32,
+          "schengen_0_64": 137.50,
+          "bulgaria_65_69": 242.76
+        },
+        {
+          "term": "7 месяцев",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 146.68,
+          "bulgaria_65_69": 261.12
+        },
+        {
+          "term": "8 месяцев",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 155.86,
+          "bulgaria_65_69": 277.44
+        },
+        {
+          "term": "9 месяцев",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 165.04,
+          "bulgaria_65_69": 295.80
+        },
+        {
+          "term": "10 месяцев",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 174.22,
+          "bulgaria_65_69": 312.12
+        },
+        {
+          "term": "11 месяцев",
+          "bulgaria_0_64": null,
+          "schengen_0_64": 183.40,
+          "bulgaria_65_69": 330.48
+        },
+        {
+          "term": "12 месяцев",
+          "bulgaria_0_64": 211.96,
+          "schengen_0_64": 193.60,
+          "bulgaria_65_69": 346.80
+        }
+      ]
+    }
+  },
+  "warnings": [
+    "Цены точно отражают значения, которые калькулятор BGINFO показывал 1 августа 2026 года.",
+    "Значение null означает, что калькулятор возвращает 0.00 или не предлагает полис. Это не означает бесплатную страховку.",
+    "Калькулятор обозначает все суммы как EUR.",
+    "Официальный сервис Bulstrad указывает цену от 208 BGN в год, поэтому валюта или тарифы в калькуляторе могут быть указаны неверно.",
+    "API калькулятора возвращает одинаковые значения в полях price и price_eur.",
+    "До подтверждения тарифов страховщиками эти цены не следует использовать для окончательного расчёта и приёма оплаты."
+  ]
+}

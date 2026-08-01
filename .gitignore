@@ -1,0 +1,32 @@
+# Зависимости
+/vendor/
+/node_modules/
+
+# Сборка и артефакты
+*.zip
+*.tar.gz
+/build/
+/dist/
+
+# Тесты
+/.phpunit.result.cache
+/coverage/
+
+# Секреты и локальные конфиги
+.env
+.env.local
+/phpunit.local.xml
+
+# IDE и ОС
+/.idea/
+/.vscode/
+*.sublime-*
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Временные файлы
+*.log
+*.tmp
+*.bak
+*~
