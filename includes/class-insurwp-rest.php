@@ -96,6 +96,15 @@ class InsurWP_Rest {
 
 		$result['show_bgn'] = ! empty( $settings['show_bgn'] );
 
+		// Для ссылки на оформление берём ЕДИНЫЙ лимит, реально доступный в селекте
+		// на целевой странице (InsurWP_Prices::limits()), а не декларируемый лимит
+		// конкретного страховщика (offer['limit_eur']): у Bulstrad Life он в JSON
+		// указан как 30000, тогда как на bginfo.eu выбрать можно только 30677.51 —
+		// подстановка недоступного значения оставляла селект пустым и страница
+		// требовала выбрать сумму страхования вручную.
+		$order_limits = InsurWP_Prices::limits( $prices );
+		$order_limit  = ! empty( $order_limits ) ? (float) $order_limits[0]['value'] : null;
+
 		// Ссылку на оформление собираем на сервере: так параметры целевой площадки
 		// (agent_id, гражданство по умолчанию) не попадают в разметку страницы заранее.
 		foreach ( $result['offers'] as $index => $offer ) {
@@ -103,7 +112,7 @@ class InsurWP_Rest {
 				$settings['order_url'],
 				array(
 					'term_api_id' => $result['term_api_id'],
-					'limit_eur'   => $offer['limit_eur'],
+					'limit_eur'   => $order_limit,
 					'date_start'  => $result['date_start'],
 					'birth_date'  => $result['birth_date'],
 					'country'     => $settings['default_country'],
