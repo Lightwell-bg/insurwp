@@ -129,6 +129,23 @@
 	}
 
 	/**
+	 * Спрашивает подтверждение перед сбросом статистики.
+	 */
+	function initStatsReset() {
+		var form = document.getElementById( 'insurwp-stats-reset-form' );
+
+		if ( ! form ) {
+			return;
+		}
+
+		form.addEventListener( 'submit', function ( event ) {
+			if ( ! window.confirm( strings.resetConfirm || '' ) ) {
+				event.preventDefault();
+			}
+		} );
+	}
+
+	/**
 	 * Живая проверка JSON в редакторе тарифов.
 	 */
 	function initJsonValidation() {
@@ -168,6 +185,7 @@
 	 */
 	function boot() {
 		initSync();
+		initStatsReset();
 		initJsonValidation();
 	}
 

@@ -29,6 +29,7 @@ require_once INSURWP_DIR . 'includes/class-insurwp-prices.php';
 require_once INSURWP_DIR . 'includes/class-insurwp-settings.php';
 require_once INSURWP_DIR . 'includes/class-insurwp-shortcode.php';
 require_once INSURWP_DIR . 'includes/class-insurwp-rest.php';
+require_once INSURWP_DIR . 'includes/class-insurwp-stats.php';
 require_once INSURWP_DIR . 'includes/class-insurwp-miniapp.php';
 require_once INSURWP_DIR . 'includes/class-insurwp-api-sync.php';
 

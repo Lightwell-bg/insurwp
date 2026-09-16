@@ -78,3 +78,57 @@
 .insurwp-admin__json-status.is-error {
 	color: #b32d2e;
 }
+
+.insurwp-admin__stats-cards {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin: 16px 0 24px;
+}
+
+.insurwp-admin__stats-card {
+	min-width: 140px;
+	padding: 14px 18px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	background: #fff;
+}
+
+.insurwp-admin__stats-value {
+	display: block;
+	font-size: 28px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.insurwp-admin__stats-label {
+	display: block;
+	margin-top: 4px;
+	color: #646970;
+	font-size: 13px;
+}
+
+.insurwp-admin__stats-chart {
+	display: block;
+	width: 100%;
+	max-width: 720px;
+	height: auto;
+	margin: 4px 0 20px;
+}
+
+.insurwp-admin__stats-bar {
+	fill: #2271b1;
+}
+
+.insurwp-admin__stats-bar:hover {
+	fill: #135e96;
+}
+
+.insurwp-admin__stats-axis {
+	font-size: 9px;
+	fill: #646970;
+}
+
+#insurwp-stats-reset-form {
+	margin-top: 4px;
+}

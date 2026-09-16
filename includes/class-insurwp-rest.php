@@ -124,6 +124,10 @@ class InsurWP_Rest {
 			);
 		}
 
+		// Считаем только состоявшиеся расчёты — не пустые запросы с ошибкой
+		// валидации, они выше уже вернулись до этой строки.
+		InsurWP_Stats::record();
+
 		return rest_ensure_response( $result );
 	}
 }

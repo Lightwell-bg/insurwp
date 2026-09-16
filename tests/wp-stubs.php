@@ -28,6 +28,7 @@ function __( $text, $domain = null ) { return $text; }
 function _e( $text, $domain = null ) { echo $text; }
 function esc_html__( $text, $domain = null ) { return $text; }
 function esc_html_e( $text, $domain = null ) { echo htmlspecialchars( (string) $text, ENT_QUOTES ); }
+function esc_attr_e( $text, $domain = null ) { echo htmlspecialchars( (string) $text, ENT_QUOTES ); }
 function esc_html( $text ) { return htmlspecialchars( (string) $text, ENT_QUOTES ); }
 function esc_attr( $text ) { return htmlspecialchars( (string) $text, ENT_QUOTES ); }
 function esc_textarea( $text ) { return htmlspecialchars( (string) $text, ENT_QUOTES ); }
@@ -56,6 +57,12 @@ function add_option( $key, $value ) {
 	return true;
 }
 
+function delete_option( $key ) {
+	unset( $GLOBALS['insurwp_options'][ $key ] );
+
+	return true;
+}
+
 function set_transient( $key, $value, $ttl = 0 ) {
 	$GLOBALS['insurwp_transients'][ $key ] = $value;
 
@@ -77,6 +84,59 @@ function current_time( $format ) {
 }
 
 function wp_json_encode( $data, $flags = 0 ) { return json_encode( $data, $flags ); }
+function number_format_i18n( $number, $decimals = 0 ) { return number_format( (float) $number, $decimals ); }
+function wp_cache_delete( $key, $group = '' ) { return true; }
+
+/**
+ * Достаточно правдоподобная заглушка $wpdb: понимает ровно один паттерн
+ * запроса, который использует InsurWP_Stats — атомарный инкремент опции.
+ * Полноценный SQL-парсер тут не нужен.
+ */
+class InsurWP_Wpdb_Stub {
+	public $options       = 'wp_options';
+	public $rows_affected = 0;
+
+	public function prepare( $query, ...$args ) {
+		$flat = array();
+
+		array_walk_recursive( $args, function ( $value ) use ( &$flat ) { $flat[] = $value; } );
+
+		$i = 0;
+
+		return preg_replace_callback(
+			'/%[sd]/',
+			function () use ( &$i, $flat ) {
+				$value = $flat[ $i++ ];
+
+				return is_int( $value ) ? (string) $value : "'" . addslashes( (string) $value ) . "'";
+			},
+			$query
+		);
+	}
+
+	public function query( $sql ) {
+		if ( ! preg_match( "/UPDATE .* SET option_value = option_value \+ 1 WHERE option_name = '([^']+)'/", $sql, $m ) ) {
+			$this->rows_affected = 0;
+
+			return false;
+		}
+
+		$key = $m[1];
+
+		if ( ! array_key_exists( $key, $GLOBALS['insurwp_options'] ) ) {
+			$this->rows_affected = 0;
+
+			return 0;
+		}
+
+		$GLOBALS['insurwp_options'][ $key ] = (int) $GLOBALS['insurwp_options'][ $key ] + 1;
+		$this->rows_affected                = 1;
+
+		return 1;
+	}
+}
+
+$GLOBALS['wpdb'] = new InsurWP_Wpdb_Stub();
 
 // --- Хуки, ассеты, шорткоды ---------------------------------------------------
 
@@ -225,6 +285,7 @@ require_once $insurwp_root . 'includes/class-insurwp-prices.php';
 require_once $insurwp_root . 'includes/class-insurwp-settings.php';
 require_once $insurwp_root . 'includes/class-insurwp-shortcode.php';
 require_once $insurwp_root . 'includes/class-insurwp-rest.php';
+require_once $insurwp_root . 'includes/class-insurwp-stats.php';
 require_once $insurwp_root . 'includes/class-insurwp-miniapp.php';
 require_once $insurwp_root . 'includes/class-insurwp-api-sync.php';
 

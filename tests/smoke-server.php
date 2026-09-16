@@ -96,6 +96,52 @@ $error = InsurWP_Rest::quote(
 );
 insurwp_check( 'битая дата возвращает WP_Error', is_wp_error( $error ) );
 
+echo "\n== Статистика ==\n";
+// К этому моменту выше уже был один успешный quote() (строка 58) и один
+// с ошибкой валидации (строка 88) — проверяем относительным приростом,
+// а не абсолютным нулём, чтобы не зависеть от порядка тестов.
+$stats_before = InsurWP_Stats::total();
+
+InsurWP_Rest::quote(
+	new WP_REST_Request(
+		array(
+			'term'       => '12 месяцев',
+			'date_start' => '2026-08-06',
+			'birth_date' => '1990-07-01',
+			'territory'  => 'all',
+		)
+	)
+);
+insurwp_check( 'успешный расчёт увеличивает счётчик', InsurWP_Stats::total() === $stats_before + 1 );
+
+InsurWP_Rest::quote(
+	new WP_REST_Request(
+		array(
+			'term'       => '12 месяцев',
+			'date_start' => 'не дата',
+			'birth_date' => '1990-07-01',
+		)
+	)
+);
+insurwp_check( 'ошибка валидации счётчик не трогает', InsurWP_Stats::total() === $stats_before + 1 );
+
+$today_before = InsurWP_Stats::range_total( 1 );
+InsurWP_Stats::record();
+insurwp_check(
+	'record() увеличивает общий и дневной счётчики',
+	InsurWP_Stats::total() === $stats_before + 2 && InsurWP_Stats::range_total( 1 ) === $today_before + 1
+);
+
+$daily = InsurWP_Stats::daily( 5 );
+insurwp_check( 'daily(5) возвращает 5 дней', 5 === count( $daily ) );
+insurwp_check( 'первый ключ — сегодня', array_key_first( $daily ) === current_time( 'Y-m-d' ) );
+insurwp_check( 'сумма daily(7) совпадает с range_total(7)', array_sum( InsurWP_Stats::daily( 7 ) ) === InsurWP_Stats::range_total( 7 ) );
+
+insurwp_check( 'перед сбросом счётчик не нулевой', InsurWP_Stats::total() > 0 );
+InsurWP_Stats::reset();
+insurwp_check( 'reset() обнуляет общий счётчик', 0 === InsurWP_Stats::total() );
+insurwp_check( 'reset() обнуляет дневную разбивку', 0 === array_sum( InsurWP_Stats::daily( 30 ) ) );
+
 echo "\n== Валидация тарифов ==\n";
 insurwp_check( 'битый JSON отклонён', is_wp_error( InsurWP_Prices::parse_and_validate( '{oops' ) ) );
 insurwp_check( 'пустые insurers отклонены', is_wp_error( InsurWP_Prices::parse_and_validate( '{"insurers":{}}' ) ) );

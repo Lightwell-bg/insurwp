@@ -26,6 +26,7 @@ class InsurWP_Admin {
 		add_action( 'admin_post_insurwp_save_prices', array( __CLASS__, 'handle_save_prices' ) );
 		add_action( 'admin_post_insurwp_apply_sync', array( __CLASS__, 'handle_apply_sync' ) );
 		add_action( 'admin_post_insurwp_discard_sync', array( __CLASS__, 'handle_discard_sync' ) );
+		add_action( 'admin_post_insurwp_reset_stats', array( __CLASS__, 'handle_reset_stats' ) );
 		add_action( 'wp_ajax_insurwp_sync_step', array( __CLASS__, 'ajax_sync_step' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( INSURWP_FILE ), array( __CLASS__, 'action_links' ) );
@@ -95,13 +96,14 @@ class InsurWP_Admin {
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( 'insurwp_sync' ),
 				'strings' => array(
-					'starting'  => __( 'Запускаем обновление…', 'insurwp' ),
-					'progress'  => __( 'Обработано сроков: %1$d из %2$d', 'insurwp' ),
-					'done'      => __( 'Готово. Обновляем страницу, чтобы показать изменения…', 'insurwp' ),
-					'failed'    => __( 'Не удалось обновить тарифы:', 'insurwp' ),
-					'badJson'   => __( 'JSON содержит ошибку:', 'insurwp' ),
-					'goodJson'  => __( 'JSON корректен.', 'insurwp' ),
-					'confirm'   => __( 'Запросить актуальные тарифы у bgmedins.com? Текущие тарифы не изменятся, пока вы не подтвердите результат.', 'insurwp' ),
+					'starting'     => __( 'Запускаем обновление…', 'insurwp' ),
+					'progress'     => __( 'Обработано сроков: %1$d из %2$d', 'insurwp' ),
+					'done'         => __( 'Готово. Обновляем страницу, чтобы показать изменения…', 'insurwp' ),
+					'failed'       => __( 'Не удалось обновить тарифы:', 'insurwp' ),
+					'badJson'      => __( 'JSON содержит ошибку:', 'insurwp' ),
+					'goodJson'     => __( 'JSON корректен.', 'insurwp' ),
+					'confirm'      => __( 'Запросить актуальные тарифы у bgmedins.com? Текущие тарифы не изменятся, пока вы не подтвердите результат.', 'insurwp' ),
+					'resetConfirm' => __( 'Сбросить всю статистику расчётов? Это нельзя отменить.', 'insurwp' ),
 				),
 			)
 		);
@@ -197,6 +199,17 @@ class InsurWP_Admin {
 	}
 
 	/**
+	 * Сбрасывает накопленную статистику расчётов.
+	 */
+	public static function handle_reset_stats() {
+		self::guard( 'insurwp_reset_stats' );
+
+		InsurWP_Stats::reset();
+
+		self::redirect_back( 'stats_reset', 'stats' );
+	}
+
+	/**
 	 * AJAX-шаг синхронизации: один срок за запрос.
 	 */
 	public static function ajax_sync_step() {
@@ -239,7 +252,7 @@ class InsurWP_Admin {
 		}
 
 		$tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'settings'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- только выбор вкладки.
-		$tab = in_array( $tab, array( 'settings', 'prices', 'help' ), true ) ? $tab : 'settings';
+		$tab = in_array( $tab, array( 'settings', 'stats', 'prices', 'help' ), true ) ? $tab : 'settings';
 		?>
 		<div class="wrap insurwp-admin">
 			<h1><?php esc_html_e( 'Калькулятор страховки', 'insurwp' ); ?></h1>
@@ -250,6 +263,7 @@ class InsurWP_Admin {
 				<?php
 				$tabs = array(
 					'settings' => __( 'Настройки', 'insurwp' ),
+					'stats'    => __( 'Статистика', 'insurwp' ),
 					'prices'   => __( 'Тарифы', 'insurwp' ),
 					'help'     => __( 'Подключение', 'insurwp' ),
 				);
@@ -268,6 +282,8 @@ class InsurWP_Admin {
 			<?php
 			if ( 'prices' === $tab ) {
 				self::render_prices_tab();
+			} elseif ( 'stats' === $tab ) {
+				self::render_stats_tab();
 			} elseif ( 'help' === $tab ) {
 				self::render_help_tab();
 			} else {
@@ -294,6 +310,7 @@ class InsurWP_Admin {
 			'sync_discarded' => array( 'info', __( 'Результат обновления отменён, тарифы не изменились.', 'insurwp' ) ),
 			'sync_expired'   => array( 'error', __( 'Сессия обновления истекла. Запустите обновление заново.', 'insurwp' ) ),
 			'prices_error'   => array( 'error', get_transient( 'insurwp_prices_error' ) ),
+			'stats_reset'    => array( 'success', __( 'Статистика сброшена.', 'insurwp' ) ),
 		);
 
 		if ( ! isset( $map[ $notice ] ) ) {
@@ -421,6 +438,117 @@ class InsurWP_Admin {
 			</table>
 			<?php submit_button(); ?>
 		</form>
+		<?php
+	}
+
+	/**
+	 * Вкладка статистики.
+	 */
+	private static function render_stats_tab() {
+		$total = InsurWP_Stats::total();
+		$today = InsurWP_Stats::range_total( 1 );
+		$week  = InsurWP_Stats::range_total( 7 );
+		$month = InsurWP_Stats::range_total( 30 );
+		$daily = InsurWP_Stats::daily( 30 );
+		?>
+		<h2><?php esc_html_e( 'Статистика расчётов', 'insurwp' ); ?></h2>
+		<p class="description">
+			<?php esc_html_e( 'Считается каждый успешный расчёт через калькулятор — на сайте и в Telegram-мини-аппе одинаково.', 'insurwp' ); ?>
+		</p>
+
+		<div class="insurwp-admin__stats-cards">
+			<div class="insurwp-admin__stats-card">
+				<span class="insurwp-admin__stats-value"><?php echo esc_html( number_format_i18n( $total ) ); ?></span>
+				<span class="insurwp-admin__stats-label"><?php esc_html_e( 'Всего расчётов', 'insurwp' ); ?></span>
+			</div>
+			<div class="insurwp-admin__stats-card">
+				<span class="insurwp-admin__stats-value"><?php echo esc_html( number_format_i18n( $today ) ); ?></span>
+				<span class="insurwp-admin__stats-label"><?php esc_html_e( 'Сегодня', 'insurwp' ); ?></span>
+			</div>
+			<div class="insurwp-admin__stats-card">
+				<span class="insurwp-admin__stats-value"><?php echo esc_html( number_format_i18n( $week ) ); ?></span>
+				<span class="insurwp-admin__stats-label"><?php esc_html_e( 'За 7 дней', 'insurwp' ); ?></span>
+			</div>
+			<div class="insurwp-admin__stats-card">
+				<span class="insurwp-admin__stats-value"><?php echo esc_html( number_format_i18n( $month ) ); ?></span>
+				<span class="insurwp-admin__stats-label"><?php esc_html_e( 'За 30 дней', 'insurwp' ); ?></span>
+			</div>
+		</div>
+
+		<h3><?php esc_html_e( 'По дням', 'insurwp' ); ?></h3>
+		<?php self::render_stats_chart( $daily ); ?>
+
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="insurwp-stats-reset-form">
+			<?php wp_nonce_field( 'insurwp_reset_stats' ); ?>
+			<input type="hidden" name="action" value="insurwp_reset_stats">
+			<button type="submit" class="button" id="insurwp-stats-reset">
+				<?php esc_html_e( 'Сбросить статистику', 'insurwp' ); ?>
+			</button>
+		</form>
+		<?php
+	}
+
+	/**
+	 * Рисует столбчатый график расчётов по дням — простым inline SVG,
+	 * без графических библиотек: тот же принцип, что и у фронтенда плагина.
+	 *
+	 * @param array<string,int> $daily Разбивка от сегодня к прошлому (см. InsurWP_Stats::daily()).
+	 */
+	private static function render_stats_chart( array $daily ) {
+		// Для графика нужен порядок слева направо по времени — наоборот тому,
+		// что удобно для карточек и текстовых списков.
+		$days  = array_reverse( $daily, true );
+		$count = count( $days );
+
+		if ( 0 === $count ) {
+			return;
+		}
+
+		$max = max( 1, max( $days ) );
+
+		$width        = 640;
+		$height       = 200;
+		$top          = 10;
+		$bottom       = 22;
+		$chart_height = $height - $top - $bottom;
+		$gap          = 3;
+		$bar_width    = ( $width - ( $count - 1 ) * $gap ) / $count;
+		$label_step   = (int) max( 1, round( $count / 6 ) );
+		?>
+		<svg class="insurwp-admin__stats-chart" viewBox="0 0 <?php echo esc_attr( $width ); ?> <?php echo esc_attr( $height ); ?>" role="img" aria-label="<?php esc_attr_e( 'Расчёты по дням', 'insurwp' ); ?>">
+			<?php
+			$index = 0;
+
+			foreach ( $days as $date => $value ) {
+				// Минимум 2px даже для нулевых дней — иначе у пустого дня
+				// не остаётся области для наведения курсора.
+				$bar_height = max( 2, $chart_height * ( $value / $max ) );
+				$x          = $index * ( $bar_width + $gap );
+				$y          = $top + ( $chart_height - $bar_height );
+
+				printf(
+					'<rect class="insurwp-admin__stats-bar" x="%s" y="%s" width="%s" height="%s"><title>%s: %s</title></rect>',
+					esc_attr( round( $x, 1 ) ),
+					esc_attr( round( $y, 1 ) ),
+					esc_attr( round( $bar_width, 1 ) ),
+					esc_attr( round( $bar_height, 1 ) ),
+					esc_html( $date ),
+					esc_html( number_format_i18n( $value ) )
+				);
+
+				if ( 0 === $index % $label_step || $index === $count - 1 ) {
+					printf(
+						'<text class="insurwp-admin__stats-axis" x="%s" y="%s" text-anchor="middle">%s</text>',
+						esc_attr( round( $x + $bar_width / 2, 1 ) ),
+						esc_attr( $height - 6 ),
+						esc_html( substr( $date, 5 ) )
+					);
+				}
+
+				++$index;
+			}
+			?>
+		</svg>
 		<?php
 	}
 
