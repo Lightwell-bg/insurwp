@@ -1,6 +1,6 @@
 {
   "name": "insurwp/insurance-calculator",
-  "description": "WordPress-плагин: калькулятор медицинской страховки для иностранцев в Болгарии",
+  "description": "WordPress-плагин: калькулятор медицинской страховки для иностранцев в Болгарии и Шенгене",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "require": {

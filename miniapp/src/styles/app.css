@@ -47,7 +47,15 @@ body {
   line-height: 1.25;
 }
 
-.app__subtitle,
+.app__subtitle {
+  margin: 0;
+  /* Тёплый оттенок вместо плоского серого — тот же приём, что и акцент:
+     не кричащий цвет, но и не безликий служебный текст. */
+  color: color-mix(in srgb, var(--brand-rose) 45%, var(--ink-soft));
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .app__loading,
 .app__note {
   margin: 0;
