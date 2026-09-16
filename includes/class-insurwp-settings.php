@@ -18,6 +18,11 @@ class InsurWP_Settings {
 	const OPTION = 'insurwp_settings';
 
 	/**
+	 * Сколько адресов мини-аппа можно разрешить одновременно.
+	 */
+	const MAX_MINIAPP_ORIGINS = 10;
+
+	/**
 	 * Значения по умолчанию.
 	 *
 	 * @return array Настройки по умолчанию.
@@ -33,6 +38,7 @@ class InsurWP_Settings {
 			'title'           => 'Расчёт стоимости страховки',
 			'autocalc'        => 1,
 			'show_disclaimer' => 1,
+			'miniapp_origins' => 'https://miniapp.bginfo.eu',
 		);
 	}
 
@@ -105,6 +111,39 @@ class InsurWP_Settings {
 		$title          = isset( $input['title'] ) ? sanitize_text_field( $input['title'] ) : '';
 		$clean['title'] = '' !== $title ? $title : $defaults['title'];
 
+		$clean['miniapp_origins'] = self::sanitize_origins(
+			isset( $input['miniapp_origins'] ) ? $input['miniapp_origins'] : '',
+			$defaults['miniapp_origins']
+		);
+
 		return $clean;
+	}
+
+	/**
+	 * Санитизация списка адресов мини-аппа: по одному origin в строке.
+	 *
+	 * Пустой список означал бы, что мини-апп молча перестал работать,
+	 * поэтому в этом случае возвращаем адрес по умолчанию.
+	 *
+	 * @param string $value    Сырое значение из формы.
+	 * @param string $fallback Значение по умолчанию.
+	 * @return string Нормализованные origin, по одному в строке.
+	 */
+	private static function sanitize_origins( $value, $fallback ) {
+		$list = array();
+
+		foreach ( preg_split( '/[\r\n]+/', (string) $value ) as $line ) {
+			$origin = InsurWP_Miniapp::normalize_origin( $line );
+
+			if ( '' !== $origin ) {
+				$list[ $origin ] = $origin;
+			}
+
+			if ( count( $list ) >= self::MAX_MINIAPP_ORIGINS ) {
+				break;
+			}
+		}
+
+		return empty( $list ) ? $fallback : implode( "\n", $list );
 	}
 }

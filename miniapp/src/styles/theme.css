@@ -1,0 +1,44 @@
+/**
+ * Палитра.
+ *
+ * Внутри Telegram переменные --tg-theme-* проставляет JS из themeParams,
+ * поэтому здесь они используются только как источник со запасным значением:
+ * вне Telegram (разработка в браузере) работают запасные цвета, повторяющие
+ * оформление калькулятора на сайте.
+ */
+
+:root {
+  --bg: var(--tg-theme-bg-color, #ffffff);
+  --bg-soft: var(--tg-theme-secondary-bg-color, #f7f8fa);
+  --ink: var(--tg-theme-text-color, #1d2430);
+  --ink-soft: var(--tg-theme-hint-color, #5d6875);
+  --border: var(--tg-theme-section-separator-color, #e2e6ec);
+  --danger: var(--tg-theme-destructive-text-color, #c0392b);
+
+  /* Фирменный акцент — сознательно не завязан на --tg-theme-button-color:
+     он у разных пользователей Telegram может быть блёклым системным цветом,
+     а собственный бренд должен быть одинаково ярким для всех.
+     Значения синхронизированы с lib/brand.ts (Telegram MainButton красится
+     через JS, CSS-переменную туда не передать). */
+  --brand-rose: #d6336c;
+  --brand-rose-ink: #ffffff;
+  --brand-honey: #e4a11b;
+  --brand-pine: #1b7a6c;
+  --brand-gradient: linear-gradient(135deg, #d6336c, #e4a11b);
+
+  --accent: var(--brand-rose);
+  --accent-ink: var(--brand-rose-ink);
+
+  --radius: 14px;
+  --gap: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--tg-theme-bg-color, #171b21);
+    --bg-soft: var(--tg-theme-secondary-bg-color, #1e242c);
+    --ink: var(--tg-theme-text-color, #eef1f5);
+    --ink-soft: var(--tg-theme-hint-color, #a3adba);
+    --border: var(--tg-theme-section-separator-color, #2c333d);
+  }
+}

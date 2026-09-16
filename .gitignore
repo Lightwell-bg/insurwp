@@ -1,12 +1,14 @@
 # Зависимости
 /vendor/
 /node_modules/
+/miniapp/node_modules/
 
 # Сборка и артефакты
 *.zip
 *.tar.gz
 /build/
 /dist/
+/miniapp/dist/
 
 # Тесты
 /.phpunit.result.cache

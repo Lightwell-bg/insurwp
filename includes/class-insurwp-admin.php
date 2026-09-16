@@ -337,6 +337,16 @@ class InsurWP_Admin {
 					</td>
 				</tr>
 				<tr>
+					<th scope="row"><label for="insurwp-miniapp-origins"><?php esc_html_e( 'Адреса мини-аппа', 'insurwp' ); ?></label></th>
+					<td>
+						<textarea class="large-text code" id="insurwp-miniapp-origins" rows="3"
+							name="<?php echo esc_attr( InsurWP_Settings::OPTION ); ?>[miniapp_origins]"><?php echo esc_textarea( $settings['miniapp_origins'] ); ?></textarea>
+						<p class="description">
+							<?php esc_html_e( 'Каким сайтам разрешено обращаться к калькулятору с другого домена — по одному адресу в строке, например https://miniapp.bginfo.eu. Для локальной разработки добавьте http://localhost:5173.', 'insurwp' ); ?>
+						</p>
+					</td>
+				</tr>
+				<tr>
 					<th scope="row"><?php esc_html_e( 'Отображение цен', 'insurwp' ); ?></th>
 					<td>
 						<label>

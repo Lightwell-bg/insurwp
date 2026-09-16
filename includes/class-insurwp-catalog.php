@@ -117,6 +117,22 @@ class InsurWP_Catalog {
 	}
 
 	/**
+	 * Срок, выбранный в форме по умолчанию.
+	 *
+	 * @param array $terms Сроки из terms_from_prices().
+	 * @return string Годовой полис, если он есть в тарифах, иначе первый срок.
+	 */
+	public static function default_term( array $terms ) {
+		foreach ( $terms as $term ) {
+			if ( '12 месяцев' === $term['value'] ) {
+				return $term['value'];
+			}
+		}
+
+		return empty( $terms ) ? '' : (string) $terms[0]['value'];
+	}
+
+	/**
 	 * Подпись страховой суммы для выпадающего списка.
 	 *
 	 * @param float $limit_eur Лимит ответственности в евро.

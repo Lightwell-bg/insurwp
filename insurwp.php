@@ -29,6 +29,7 @@ require_once INSURWP_DIR . 'includes/class-insurwp-prices.php';
 require_once INSURWP_DIR . 'includes/class-insurwp-settings.php';
 require_once INSURWP_DIR . 'includes/class-insurwp-shortcode.php';
 require_once INSURWP_DIR . 'includes/class-insurwp-rest.php';
+require_once INSURWP_DIR . 'includes/class-insurwp-miniapp.php';
 require_once INSURWP_DIR . 'includes/class-insurwp-api-sync.php';
 
 if ( is_admin() ) {
@@ -43,6 +44,7 @@ function insurwp_bootstrap() {
 
 	InsurWP_Shortcode::init();
 	InsurWP_Rest::init();
+	InsurWP_Miniapp::init();
 
 	if ( is_admin() ) {
 		InsurWP_Admin::init();

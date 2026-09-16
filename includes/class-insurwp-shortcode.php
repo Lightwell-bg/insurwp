@@ -50,6 +50,29 @@ class InsurWP_Shortcode {
 	}
 
 	/**
+	 * Границы дат для полей формы.
+	 *
+	 * Считаются во времени сайта: устройство пользователя может стоять
+	 * в другой таймзоне, а тарифицируют страховщики по датам сайта.
+	 * Тем же методом пользуется мини-апп через REST, иначе ограничения
+	 * на сайте и в Telegram разъехались бы.
+	 *
+	 * @return array{today:string,start_min:string,start_max:string,birth_min:string,birth_max:string} Границы дат.
+	 */
+	public static function date_bounds() {
+		$today = current_time( 'Y-m-d' );
+
+		return array(
+			'today'     => $today,
+			'start_min' => $today,
+			'start_max' => gmdate( 'Y-m-d', strtotime( $today . ' +1 year' ) ),
+			// Ограничение по возрасту: верхняя граница тарифов — 85 лет.
+			'birth_min' => gmdate( 'Y-m-d', strtotime( $today . ' -85 years' ) ),
+			'birth_max' => $today,
+		);
+	}
+
+	/**
 	 * Рендерит калькулятор.
 	 *
 	 * @param array $atts Атрибуты шорткода.
@@ -106,22 +129,8 @@ class InsurWP_Shortcode {
 			)
 		);
 
-		$today    = current_time( 'Y-m-d' );
-		$max_date = gmdate( 'Y-m-d', strtotime( $today . ' +1 year' ) );
-		// Ограничение по возрасту: верхняя граница тарифов — 85 лет.
-		$min_birth = gmdate( 'Y-m-d', strtotime( $today . ' -85 years' ) );
-
-		$default_term = '';
-
-		foreach ( $terms as $term ) {
-			if ( '12 месяцев' === $term['value'] ) {
-				$default_term = $term['value'];
-			}
-		}
-
-		if ( '' === $default_term && ! empty( $terms ) ) {
-			$default_term = $terms[0]['value'];
-		}
+		$bounds       = self::date_bounds();
+		$default_term = InsurWP_Catalog::default_term( $terms );
 
 		ob_start();
 		?>
@@ -184,9 +193,9 @@ class InsurWP_Shortcode {
 						</label>
 						<input class="insurwp__control" type="date" id="<?php echo esc_attr( $uid ); ?>-date-start"
 							name="date_start"
-							value="<?php echo esc_attr( $today ); ?>"
-							min="<?php echo esc_attr( $today ); ?>"
-							max="<?php echo esc_attr( $max_date ); ?>" required>
+							value="<?php echo esc_attr( $bounds['today'] ); ?>"
+							min="<?php echo esc_attr( $bounds['start_min'] ); ?>"
+							max="<?php echo esc_attr( $bounds['start_max'] ); ?>" required>
 					</div>
 
 					<div class="insurwp__field">
@@ -195,8 +204,8 @@ class InsurWP_Shortcode {
 						</label>
 						<input class="insurwp__control" type="date" id="<?php echo esc_attr( $uid ); ?>-birth-date"
 							name="birth_date"
-							min="<?php echo esc_attr( $min_birth ); ?>"
-							max="<?php echo esc_attr( $today ); ?>" required>
+							min="<?php echo esc_attr( $bounds['birth_min'] ); ?>"
+							max="<?php echo esc_attr( $bounds['birth_max'] ); ?>" required>
 					</div>
 
 					<div class="insurwp__field insurwp__field--submit">

@@ -82,6 +82,7 @@ function wp_json_encode( $data, $flags = 0 ) { return json_encode( $data, $flags
 
 function add_action( ...$args ) {}
 function add_filter( ...$args ) {}
+function apply_filters( $hook, $value, ...$args ) { return $value; }
 function add_shortcode( ...$args ) {}
 function is_admin() { return false; }
 function wp_register_style( ...$args ) {}
@@ -134,6 +135,7 @@ function is_wp_error( $thing ) { return $thing instanceof WP_Error; }
 
 class WP_REST_Server {
 	const CREATABLE = 'POST';
+	const READABLE  = 'GET';
 }
 
 class WP_REST_Request {
@@ -151,6 +153,10 @@ function register_rest_route( $namespace, $route, $args ) {
 function rest_ensure_response( $data ) { return $data; }
 
 // --- HTTP ---------------------------------------------------------------------
+
+function wp_parse_url( $url, $component = -1 ) { return parse_url( (string) $url, $component ); }
+
+function get_http_origin() { return isset( $_SERVER['HTTP_ORIGIN'] ) ? $_SERVER['HTTP_ORIGIN'] : ''; }
 
 function add_query_arg( $args, $url ) {
 	$separator = false === strpos( $url, '?' ) ? '?' : '&';
@@ -219,6 +225,7 @@ require_once $insurwp_root . 'includes/class-insurwp-prices.php';
 require_once $insurwp_root . 'includes/class-insurwp-settings.php';
 require_once $insurwp_root . 'includes/class-insurwp-shortcode.php';
 require_once $insurwp_root . 'includes/class-insurwp-rest.php';
+require_once $insurwp_root . 'includes/class-insurwp-miniapp.php';
 require_once $insurwp_root . 'includes/class-insurwp-api-sync.php';
 
 $GLOBALS['insurwp_failures'] = 0;

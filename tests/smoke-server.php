@@ -143,4 +143,40 @@ $no_diff = InsurWP_Api_Sync::diff(
 );
 insurwp_check( 'diff молчит без изменений', 0 === count( $no_diff ) );
 
+echo "\n== Мини-апп: справочники ==\n";
+InsurWP_Miniapp::register_routes();
+insurwp_check( 'маршрут зарегистрирован', isset( $GLOBALS['insurwp_routes']['insurwp/v1/options'] ) );
+
+$options = InsurWP_Miniapp::options();
+$dates   = $options['dates'];
+
+insurwp_check( '15 сроков (получено ' . count( $options['terms'] ) . ')', 15 === count( $options['terms'] ) );
+insurwp_check( 'срок по умолчанию — год', '12 месяцев' === $options['default_term'] );
+insurwp_check( 'территории: все + 2', 3 === count( $options['territories'] ) && 'all' === $options['territories'][0]['value'] );
+insurwp_check( 'лимит подписан', isset( $options['limits'][0]['label'] ) && str_contains( $options['limits'][0]['label'], '30677.51' ) );
+insurwp_check( 'show_bgn булев', is_bool( $options['show_bgn'] ) );
+insurwp_check( 'начало не раньше сегодня', $dates['start_min'] === $dates['today'] );
+insurwp_check( 'горизонт начала — год', (int) substr( $dates['start_max'], 0, 4 ) === (int) substr( $dates['today'], 0, 4 ) + 1 );
+insurwp_check( 'нижняя граница рождения — 85 лет', (int) substr( $dates['birth_min'], 0, 4 ) === (int) substr( $dates['today'], 0, 4 ) - 85 );
+insurwp_check( 'рождение не позже сегодня', $dates['birth_max'] === $dates['today'] );
+// Форма на сайте и мини-апп должны ограничивать даты одинаково.
+insurwp_check( 'границы совпадают с формой на сайте', str_contains( $html, 'max="' . $dates['start_max'] . '"' ) );
+
+echo "\n== Мини-апп: доступ с другого домена ==\n";
+$allowed = array( 'https://miniapp.bginfo.eu' );
+
+insurwp_check( 'свой адрес разрешён', InsurWP_Miniapp::is_allowed_origin( 'https://miniapp.bginfo.eu', $allowed ) );
+insurwp_check( 'хвостовой слэш не мешает', InsurWP_Miniapp::is_allowed_origin( 'https://miniapp.bginfo.eu/', $allowed ) );
+insurwp_check( 'регистр хоста не мешает', InsurWP_Miniapp::is_allowed_origin( 'https://MiniApp.BgInfo.eu', $allowed ) );
+insurwp_check( 'похожий домен отклонён', ! InsurWP_Miniapp::is_allowed_origin( 'https://miniapp.bginfo.eu.example.com', $allowed ) );
+insurwp_check( 'другая схема отклонена', ! InsurWP_Miniapp::is_allowed_origin( 'http://miniapp.bginfo.eu', $allowed ) );
+insurwp_check( 'пустой Origin отклонён', ! InsurWP_Miniapp::is_allowed_origin( '', $allowed ) );
+insurwp_check( 'порт сохраняется', 'http://localhost:5173' === InsurWP_Miniapp::normalize_origin( 'http://localhost:5173/' ) );
+
+$origins = InsurWP_Settings::sanitize( array( 'miniapp_origins' => "https://miniapp.bginfo.eu/\nhttp://localhost:5173\nне адрес" ) );
+insurwp_check( 'список нормализован', "https://miniapp.bginfo.eu\nhttp://localhost:5173" === $origins['miniapp_origins'] );
+
+$broken = InsurWP_Settings::sanitize( array( 'miniapp_origins' => 'ерунда' ) );
+insurwp_check( 'мусор заменён адресом по умолчанию', 'https://miniapp.bginfo.eu' === $broken['miniapp_origins'] );
+
 insurwp_finish();
